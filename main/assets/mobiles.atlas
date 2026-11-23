@@ -1,0 +1,4 @@
+images {
+  image: "/main/assets/images/small_tv.png"
+}
+extrude_borders: 2
