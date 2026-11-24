@@ -1,9 +1,36 @@
+local group_data = require("main/group_data")
+
 TV_URLS = {"/tv1#tv","/tv2#tv","/tv3#tv","/tv4#tv","/tv5#tv","/tv6#tv"}
 
+local function sign(v)
+	return v > 0 and 1 or (v == 0 and 0 or -1)
+end
+
 function init(self)
-	-- Add initialization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
+	-- Set up position tables for squircle
+	local len = 0.0
+	--local lastx = 272.0 + 170.0
+	--local lasty = 188.0
+	local lastx = 1.0
+	local lasty = 0.0
+		group_data.xpos[1] = lastx
+	group_data.ypos[1] = lasty
+	group_data.cumulative[1] = 0.0
+	for i=1,128 do
+		local p = i * math.pi / 64.0
+		--local x = 272.0 + 170.0 * sign(math.cos(p)) * math.sqrt(math.abs(math.cos(p)))
+		--local y = 188.0 + 115.0 * sign(math.sin(p)) * math.sqrt(math.abs(math.sin(p)))
+		local x = sign(math.cos(p)) * math.sqrt(math.abs(math.cos(p)))
+		local y = sign(math.sin(p)) * math.sqrt(math.abs(math.sin(p)))
+		len = len + math.sqrt((x-lastx)*(x-lastx) + (y-lasty)*(y-lasty))
+		group_data.xpos[i+1] = x
+		group_data.ypos[i+1] = y
+		group_data.cumulative[i+1] = len
+		lastx = x
+		lasty = y
+	end
+	group_data.length = len
+	
 	self.state = 0
 end
 
@@ -16,7 +43,7 @@ end
 function update(self, dt)
 	if self.state == 0 then
 		for i, tv_url in ipairs(TV_URLS) do
-			msg.post(tv_url,"position", { path_pos = (i-1)*1020.0 / 6})
+			msg.post(tv_url,"position", { path_pos = (i-1)*group_data.length / 6})
 		end
 		self.state = 1
 	end

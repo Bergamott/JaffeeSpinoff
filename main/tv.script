@@ -1,5 +1,8 @@
-TV_SPEED = 50.0
-PATH_LENGTH = 1020.0
+local group_data = require("main/group_data")
+
+TV_SPEED = 0.3
+--PATH_LENGTH = 1020.0
+PATH_LENGTH = 6.2831
 STOP1 = 200.0
 STOP2 = 310.0
 STOP3 = 400.0
@@ -8,6 +11,10 @@ STOP5 = 710.0
 STOP6 = 820.0
 STOP7 = 910.0
 STOP8 = PATH_LENGTH
+
+local function sign(v)
+	return v > 0 and 1 or (v == 0 and 0 or -1)
+end
 
 function init(self)
 	self.path_pos = 0.0
@@ -22,35 +29,54 @@ end
 
 function update(self, dt)
 	self.path_pos = self.path_pos + dt * TV_SPEED
-	if self.path_pos >= PATH_LENGTH then
-		self.path_pos = self.path_pos - PATH_LENGTH
+	if self.path_pos >= group_data.length then
+		self.path_pos = self.path_pos - group_data.length
 	end
 
-	if self.path_pos >= 0 and self.path_pos < STOP1 then -- Top side
-		self.pos.x = 372.0 - self.path_pos
-		self.pos.y = 302.0
-	elseif self.path_pos >= STOP1 and self.path_pos < STOP2 then -- NW corner
-		self.pos.x = 172.0 - 70.0 * math.sin(math.pi * (self.path_pos - STOP1) / 220.0)
-		self.pos.y = 232.0 + 70.0 * math.cos(math.pi * (self.path_pos - STOP1) / 220.0)
-	elseif self.path_pos >= STOP2 and self.path_pos < STOP3 then -- Left side
-		self.pos.x = 102.0
-		self.pos.y = 233.0 - (self.path_pos - STOP2)
-	elseif self.path_pos >= STOP3 and self.path_pos < STOP4 then -- SW corner
-		self.pos.x = 172.0 - 70.0 * math.cos(math.pi * (self.path_pos - STOP3) / 220.0)
-		self.pos.y = 142.0 - 70.0 * math.sin(math.pi * (self.path_pos - STOP3) / 220.0)
-	elseif self.path_pos >= STOP4 and self.path_pos < STOP5 then -- Bottom side
-		self.pos.x = 172.0 + (self.path_pos - STOP4)
-		self.pos.y = 72.0
-	elseif self.path_pos >= STOP5 and self.path_pos < STOP6 then -- SE corner
-		self.pos.x = 372.0 + 70.0 * math.sin(math.pi * (self.path_pos - STOP5) / 220.0)
-		self.pos.y = 142.0 - 70.0 * math.cos(math.pi * (self.path_pos - STOP5) / 220.0)
-	elseif self.path_pos >= STOP6 and self.path_pos < STOP7 then -- Right side
-		self.pos.x = 442.0
-		self.pos.y = 143.0 + (self.path_pos - STOP6)
-	elseif self.path_pos >= STOP7 and self.path_pos < STOP8 then -- SE corner
-		self.pos.x = 372.0 + 70.0 * math.cos(math.pi * (self.path_pos - STOP7) / 220.0)
-		self.pos.y = 232.0 + 70.0 * math.sin(math.pi * (self.path_pos - STOP7) / 220.0)
+--	if self.path_pos >= 0 and self.path_pos < STOP1 then -- Top side
+--		self.pos.x = 372.0 - self.path_pos
+--		self.pos.y = 302.0
+--	elseif self.path_pos >= STOP1 and self.path_pos < STOP2 then -- NW corner
+--		self.pos.x = 172.0 - 70.0 * math.sin(math.pi * (self.path_pos - STOP1) / 220.0)
+--		self.pos.y = 232.0 + 70.0 * math.cos(math.pi * (self.path_pos - STOP1) / 220.0)
+--	elseif self.path_pos >= STOP2 and self.path_pos < STOP3 then -- Left side
+--		self.pos.x = 102.0
+--		self.pos.y = 233.0 - (self.path_pos - STOP2)
+--	elseif self.path_pos >= STOP3 and self.path_pos < STOP4 then -- SW corner
+--		self.pos.x = 172.0 - 70.0 * math.cos(math.pi * (self.path_pos - STOP3) / 220.0)
+--		self.pos.y = 142.0 - 70.0 * math.sin(math.pi * (self.path_pos - STOP3) / 220.0)
+--	elseif self.path_pos >= STOP4 and self.path_pos < STOP5 then -- Bottom side
+--		self.pos.x = 172.0 + (self.path_pos - STOP4)
+--		self.pos.y = 72.0
+--	elseif self.path_pos >= STOP5 and self.path_pos < STOP6 then -- SE corner
+--		self.pos.x = 372.0 + 70.0 * math.sin(math.pi * (self.path_pos - STOP5) / 220.0)
+--		self.pos.y = 142.0 - 70.0 * math.cos(math.pi * (self.path_pos - STOP5) / 220.0)
+--	elseif self.path_pos >= STOP6 and self.path_pos < STOP7 then -- Right side
+--		self.pos.x = 442.0
+--		self.pos.y = 143.0 + (self.path_pos - STOP6)
+--	elseif self.path_pos >= STOP7 and self.path_pos < STOP8 then -- SE corner
+--		self.pos.x = 372.0 + 70.0 * math.cos(math.pi * (self.path_pos - STOP7) / 220.0)
+--		self.pos.y = 232.0 + 70.0 * math.sin(math.pi * (self.path_pos - STOP7) / 220.0)
+--	end
+
+	--self.pos.x = 272.0 + 170.0 * sign(math.cos(self.path_pos)) * math.sqrt(math.abs(math.cos(self.path_pos)))
+	--self.pos.y = 188.0 + 115.0 * sign(math.sin(self.path_pos)) * math.sqrt(math.abs(math.sin(self.path_pos)))
+
+	local a = 1
+	local b = 129
+	while b-a > 1.1 do
+		local c = math.floor((b + a) / 2)
+		if self.path_pos < group_data.cumulative[c] then
+			b = c
+		else
+			a = c
+		end
 	end
+	local t = (self.path_pos - group_data.cumulative[a]) / (group_data.cumulative[b]-group_data.cumulative[a])
+	--self.pos.x = group_data.xpos[a] + t * (group_data.xpos[b] - group_data.xpos[a])
+	--self.pos.y = group_data.ypos[a] + t * (group_data.ypos[b] - group_data.ypos[a])
+	self.pos.x = 272.0 + 171.0 * (group_data.xpos[a] + t * (group_data.xpos[b] - group_data.xpos[a]))
+	self.pos.y = 188.0 + 116.0 * (group_data.ypos[a] + t * (group_data.ypos[b] - group_data.ypos[a]))
 	go.set_position(self.pos)
 end
 
@@ -71,7 +97,7 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("position") then
-		print(message.path_pos)
+		--print(message.path_pos)
 		self.path_pos = message.path_pos
 	end
 end
