@@ -1,4 +1,31 @@
 images {
   image: "/main/assets/images/small_tv.png"
 }
+images {
+  image: "/main/assets/images/small_tv_disabled.png"
+}
+images {
+  image: "/main/assets/images/jacked.png"
+}
+images {
+  image: "/main/assets/images/jacked_light.png"
+}
+images {
+  image: "/main/assets/images/arrow.png"
+  pivot_x: 0.0
+}
+images {
+  image: "/main/assets/images/empty.png"
+}
+animations {
+  id: "jacked_flash"
+  images {
+    image: "/main/assets/images/jacked_light.png"
+  }
+  images {
+    image: "/main/assets/images/jacked.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 4
+}
 extrude_borders: 2
